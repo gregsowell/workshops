@@ -97,6 +97,13 @@
     tower_host: "{{ ansible_host }}"
     tower_verify_ssl: false
 
+- name: copy file to local decyrpted.
+  copy:
+    src: "{{ playbook_dir }}/tower_license_en.json"
+    dest: "{{ playbook_dir }}/tower_license.json"
+  delegate_to: localhost
+  run_once: true
+
 - name: Ensure eula is accepted if posting license
   command: python -c "import json; license = json.loads(open('{{playbook_dir}}/tower_license.json', 'r').read()); ceula = license.get('eula_accepted'); license['eula_accepted'] = True if not ceula else ceula ; open('{{playbook_dir}}/tower_license.json', 'w').write(json.dumps(license));"
   delegate_to: localhost
